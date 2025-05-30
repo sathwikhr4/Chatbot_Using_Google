@@ -1,8 +1,8 @@
 import requests
 
 # Credentials (Replace with your actual API key and Search Engine ID)
-GOOGLE_API_KEY = "Api_Key"
-SEARCH_ENGINE_ID = "Engine_ID"
+GOOGLE_API_KEY = os.environ.get('API_KEY')
+SEARCH_ENGINE_ID = os.environ.get('ENGINE_ID')
 
 def google_search(query, num_results=3):
     url = "https://www.googleapis.com/customsearch/v1"
