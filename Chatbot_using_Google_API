@@ -1,0 +1,50 @@
+import requests
+
+# Credentials (Replace with your actual API key and Search Engine ID)
+GOOGLE_API_KEY = "Api_Key"
+SEARCH_ENGINE_ID = "Engine_ID"
+
+def google_search(query, num_results=3):
+    url = "https://www.googleapis.com/customsearch/v1"
+    params = {
+        'key': GOOGLE_API_KEY,
+        'cx': SEARCH_ENGINE_ID,
+        'q': query,
+        'num': num_results
+    }
+
+    response = requests.get(url, params=params)
+    results = response.json()
+
+    snippets = []
+    if 'items' in results:
+        for item in results['items']:
+            snippets.append(item.get('snippet', ''))
+    return snippets
+
+def create_conversational_reply(snippets, query):
+    if not snippets:
+        return "I'm sorry, I couldn't find any information on that."
+
+    # Combine and clean up into a conversational reply
+    combined = " ".join(snippets)
+    reply = f"Here's what I found about \"{query}\": {combined.strip()}"
+
+    # Make it sound friendly
+    reply += "\n\nIs there anything else you'd like to know?"
+    return reply
+
+def run_chatbot():
+    print("🤖 Ask me anything! (Type 'exit' to stop)\n")
+    while True:
+        user_input = input("You: ")
+        if user_input.lower() in ['exit', 'quit']:
+            print("Bot: Goodbye! 👋")
+            break
+        search_results = google_search(user_input)
+        response = create_conversational_reply(search_results, user_input)
+        print(f"Bot: {response}\n")
+
+# Run the chatbot
+if __name__ == "__main__":
+    run_chatbot()
